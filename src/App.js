@@ -11,6 +11,7 @@ import "../src/components/hollow/style.scss"
 import "../src/components/splice/style.scss"
 import "../src/components/echo/style.scss"
 import "../src/components/lift/style.scss"
+import "../src/components/shadow/style.scss"
 
 const App = () => {
 	const [currentEffect, setCurrentEffect] = React.useState("");
@@ -23,22 +24,27 @@ const App = () => {
 		direction: -45,
 		color: "rgb(128, 128, 128)"
 	});
-
     const [echo, setEcho] = React.useState({
         offset: 50,
         direction: -45,
         color: "rgb(128, 128, 128"
     });
-
     const [lift, setLift] = React.useState({
         intensity: 60
     });
+	const [shadow, setShadow] = React.useState({
+		offset: 50,
+		direction: -45,
+		blur: 0,
+		transparency: 40,
+		color: "rgb(128, 128, 128"
+	})
 
 	const toRadians = (angleDegrees) => {
 		return angleDegrees * (Math.PI / 180);
 	};
 
-    
+	
 	return (
 		<div style={{ margin: 100}}>
 			<Stack sx={{ marginBottom: 5 }} direction="row" spacing={5}>
@@ -47,6 +53,7 @@ const App = () => {
 				<Button variant="contained" onClick={() => setCurrentEffect("splice")}>Splice</Button>
                 <Button variant="contained" onClick={() => setCurrentEffect("echo")}>Echo</Button>
                 <Button variant="contained" onClick={() => setCurrentEffect("lift")}>Lift</Button>
+				<Button variant="contained" onClick={() => setCurrentEffect("shadow")}>Shadow</Button>
 			</Stack>
 
 			{currentEffect === "hollow" && 
@@ -147,6 +154,57 @@ const App = () => {
             />
             }
 
+			{currentEffect === "shadow" &&
+			<Box>
+				<TextField 
+				id="offset" 
+				label="Offset" 
+				variant="standard" 
+				value={shadow.offset} 
+				onChange={(e) => setShadow({...shadow, offset: e.target.value})}
+				/>
+				<TextField 
+				sx={{ marginLeft: 5 }}
+				id="direction" 
+				label="Direction" 
+				variant="standard" 
+				value={shadow.direction} 
+				onChange={(e) => setShadow({...shadow, direction: e.target.value})}
+				/>
+				<TextField 
+				sx={{ marginLeft: 5 }}
+				id="blur" 
+				label="Blur" 
+				variant="standard" 
+				value={shadow.blur} 
+				onChange={(e) => setShadow({...shadow, blur: e.target.value})}
+				/>
+				<TextField 
+				sx={{ marginLeft: 5 }}
+				id="transparency" 
+				label="Transparency" 
+				variant="standard" 
+				value={shadow.transparency} 
+				onChange={(e) => setShadow({...shadow, transparency: e.target.value})}
+				/>
+				<FormControl variant="standard" sx={{ marginLeft: 5 }}>
+					<InputLabel id="label-shadow-color">Color</InputLabel>
+					<Select
+						labelId="label-shadow-color"
+						id="select-shadow-color"
+						value={shadow.color}
+						label="Color"
+						onChange={(e) => setShadow({...shadow, color: e.target.value})}
+					>
+						<MenuItem value={"rgb(128, 128, 128"}>Gray</MenuItem>
+						<MenuItem value={"rgb(255, 0, 0"}>Red</MenuItem>
+						<MenuItem value={"rgb(0, 255, 0"}>Green</MenuItem>
+						<MenuItem value={"rgb(0, 0, 255"}>Blue</MenuItem>
+					</Select>
+				</FormControl>
+			</Box>
+			}
+
 			<div style={{ margin: '120px 0px 0px 550px' }}>
 				<div className={currentEffect}>
 					<div 
@@ -171,6 +229,11 @@ const App = () => {
                         {
                             textShadow: `0px 4.5px ${lift.intensity * 0.2925 + 4.5}px rgba(0, 0, 0, ${lift.intensity / 100})`
                         }
+						:
+						currentEffect === "shadow" ?
+						{
+							textShadow: `${(shadow.offset * 0.15) * -(Math.sin(toRadians(shadow.direction)))}px ${(shadow.offset * 0.15) * Math.cos(toRadians(shadow.direction))}px ${shadow.blur * 0.15}px ${shadow.color}, ${shadow.transparency / 100})`
+						}
 						: {} 
 					: {} 
 					}

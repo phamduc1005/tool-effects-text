@@ -10,6 +10,7 @@ import MenuItem from '@mui/material/MenuItem';
 import "../src/components/hollow/style.scss"
 import "../src/components/splice/style.scss"
 import "../src/components/echo/style.scss"
+import "../src/components/lift/style.scss"
 
 const App = () => {
 	const [currentEffect, setCurrentEffect] = React.useState("");
@@ -29,11 +30,15 @@ const App = () => {
         color: "rgb(128, 128, 128"
     });
 
+    const [lift, setLift] = React.useState({
+        intensity: 60
+    });
+
 	const toRadians = (angleDegrees) => {
 		return angleDegrees * (Math.PI / 180);
 	};
 
-
+    
 	return (
 		<div style={{ margin: 100}}>
 			<Stack sx={{ marginBottom: 5 }} direction="row" spacing={5}>
@@ -41,6 +46,7 @@ const App = () => {
 				<Button variant="contained" onClick={() => setCurrentEffect("hollow")}>Hollow</Button>
 				<Button variant="contained" onClick={() => setCurrentEffect("splice")}>Splice</Button>
                 <Button variant="contained" onClick={() => setCurrentEffect("echo")}>Echo</Button>
+                <Button variant="contained" onClick={() => setCurrentEffect("lift")}>Lift</Button>
 			</Stack>
 
 			{currentEffect === "hollow" && 
@@ -131,24 +137,39 @@ const App = () => {
             </Box>
             }
 
+            {currentEffect === "lift" &&
+            <TextField 
+            id="intensity" 
+            label="intensity" 
+            variant="standard" 
+            value={lift.intensity} 
+            onChange={(e) => setLift({...lift, intensity: e.target.value})}
+            />
+            }
+
 			<div style={{ margin: '120px 0px 0px 550px' }}>
 				<div className={currentEffect}>
 					<div 
 					style={ 
 					currentEffect ? 
 						currentEffect === "hollow" ? 
-						{ WebkitTextStroke: ((hollow.thickness - 1) * 0.075 + 0.825).toFixed(3) } 
+						{ WebkitTextStroke: (hollow.thickness - 1) * 0.075 + 0.825 } 
 						: 
 						currentEffect === "splice" ? 
 						{ 
-						    WebkitTextStroke: ((splice.thickness - 1) * 0.075 + 0.825).toFixed(3), 
-						    textShadow: `${((splice.offset * 0.15) * -(Math.sin(toRadians(splice.direction)))).toFixed(7)}px ${((splice.offset * 0.15) * Math.cos(toRadians(splice.direction))).toFixed(7)}px 0px ${splice.color}`
+						    WebkitTextStroke: (splice.thickness - 1) * 0.075 + 0.825, 
+						    textShadow: `${(splice.offset * 0.15) * -(Math.sin(toRadians(splice.direction)))}px ${(splice.offset * 0.15) * Math.cos(toRadians(splice.direction))}px 0px ${splice.color}`
 						} 
                         : 
                         currentEffect === "echo" ?
                         { 
-                            textShadow: `${((echo.offset * 0.15) * -(Math.sin(toRadians(echo.direction)))).toFixed(7)}px ${((echo.offset * 0.15) * Math.cos(toRadians(echo.direction))).toFixed(7)}px 0px ${echo.color}, 0.5), 
-                                        ${(((echo.offset * 0.15) * -(Math.sin(toRadians(echo.direction)))).toFixed(7))* 2}px ${(((echo.offset * 0.15) * Math.cos(toRadians(echo.direction))).toFixed(7))* 2}px 0px ${echo.color}, 0.3) ` 
+                            textShadow: `${(echo.offset * 0.15) * -(Math.sin(toRadians(echo.direction)))}px ${(echo.offset * 0.15) * Math.cos(toRadians(echo.direction))}px 0px ${echo.color}, 0.5), 
+                                        ${((echo.offset * 0.15) * -(Math.sin(toRadians(echo.direction))))* 2}px ${((echo.offset * 0.15) * Math.cos(toRadians(echo.direction)))* 2}px 0px ${echo.color}, 0.3) ` 
+                        }
+                        :
+                        currentEffect === "lift" ?
+                        {
+                            textShadow: `0px 4.5px ${lift.intensity * 0.2925 + 4.5}px rgba(0, 0, 0, ${lift.intensity / 100})`
                         }
 						: {} 
 					: {} 

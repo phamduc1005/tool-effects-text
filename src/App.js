@@ -12,6 +12,7 @@ import "../src/components/splice/style.scss"
 import "../src/components/echo/style.scss"
 import "../src/components/lift/style.scss"
 import "../src/components/shadow/style.scss"
+import "../src/components/glitch/style.scss"
 
 const App = () => {
 	const [currentEffect, setCurrentEffect] = React.useState("");
@@ -38,13 +39,19 @@ const App = () => {
 		blur: 0,
 		transparency: 40,
 		color: "rgb(128, 128, 128"
-	})
+	});
+	const [glitch, setGlitch] = React.useState({
+		offset: 100,
+		direction: 90,
+		color: "rgb(255, 0, 255)"
+	});
 
 	const toRadians = (angleDegrees) => {
 		return angleDegrees * (Math.PI / 180);
 	};
 
-	
+	console.log(`${(glitch.offset * 0.075) * -(Math.sin(toRadians(glitch.direction)))}px ${(glitch.offset * 0.075) * Math.cos(toRadians(glitch.direction))}px 0px rgb(0, 255, 255),
+	${(glitch.offset * 0.075) * Math.sin(toRadians(glitch.direction))}px ${(glitch.offset * 0.075) * -(Math.cos(toRadians(glitch.direction)))}px 0px ${glitch.color}`)
 	return (
 		<div style={{ margin: 100}}>
 			<Stack sx={{ marginBottom: 5 }} direction="row" spacing={5}>
@@ -54,6 +61,7 @@ const App = () => {
                 <Button variant="contained" onClick={() => setCurrentEffect("echo")}>Echo</Button>
                 <Button variant="contained" onClick={() => setCurrentEffect("lift")}>Lift</Button>
 				<Button variant="contained" onClick={() => setCurrentEffect("shadow")}>Shadow</Button>
+				<Button variant="contained" onClick={() => setCurrentEffect("glitch")}>Glitch</Button>
 			</Stack>
 
 			{currentEffect === "hollow" && 
@@ -205,6 +213,41 @@ const App = () => {
 			</Box>
 			}
 
+			{currentEffect === "glitch" &&
+			<Box>
+				<TextField 
+				id="offset" 
+				label="Offset" 
+				variant="standard" 
+				value={glitch.offset} 
+				onChange={(e) => setGlitch({...glitch, offset: e.target.value})}
+				/>
+				<TextField 
+				sx={{ marginLeft: 5 }}
+				id="direction" 
+				label="Direction" 
+				variant="standard" 
+				value={glitch.direction} 
+				onChange={(e) => setGlitch({...glitch, direction: e.target.value})}
+				/>
+				<FormControl variant="standard" sx={{ marginLeft: 5 }}>
+					<InputLabel id="label-glitch-color">Color</InputLabel>
+					<Select
+						labelId="label-glitch-color"
+						id="select-glitch-color"
+						value={glitch.color}
+						label="Color"
+						onChange={(e) => setGlitch({...glitch, color: e.target.value})}
+					>
+						<MenuItem value={"rgb(255, 0, 255)"}>Pink</MenuItem>
+						<MenuItem value={"rgb(255, 0, 0)"}>Red</MenuItem>
+						<MenuItem value={"rgb(0, 255, 0"}>Green</MenuItem>
+						<MenuItem value={"rgb(0, 0, 255"}>Blue</MenuItem>
+					</Select>
+				</FormControl>
+			</Box>
+			}
+
 			<div style={{ margin: '120px 0px 0px 550px' }}>
 				<div className={currentEffect}>
 					<div 
@@ -233,6 +276,12 @@ const App = () => {
 						currentEffect === "shadow" ?
 						{
 							textShadow: `${(shadow.offset * 0.15) * -(Math.sin(toRadians(shadow.direction)))}px ${(shadow.offset * 0.15) * Math.cos(toRadians(shadow.direction))}px ${shadow.blur * 0.15}px ${shadow.color}, ${shadow.transparency / 100})`
+						}
+						:
+						currentEffect === "glitch" ?
+						{
+							textShadow: `${(glitch.offset * 0.075) * -(Math.sin(toRadians(glitch.direction)))}px ${(glitch.offset * 0.075) * Math.cos(toRadians(glitch.direction))}px 0px rgb(0, 255, 255),
+										${(glitch.offset * 0.075) * Math.sin(toRadians(glitch.direction))}px ${(glitch.offset * 0.075) * -(Math.cos(toRadians(glitch.direction)))}px 0px ${glitch.color}`
 						}
 						: {} 
 					: {} 

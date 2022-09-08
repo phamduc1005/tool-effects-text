@@ -13,6 +13,7 @@ import "../src/components/echo/style.scss"
 import "../src/components/lift/style.scss"
 import "../src/components/shadow/style.scss"
 import "../src/components/glitch/style.scss"
+import "../src/components/neon/style.scss"
 
 const App = () => {
 	const [currentEffect, setCurrentEffect] = React.useState("");
@@ -45,13 +46,15 @@ const App = () => {
 		direction: 90,
 		color: "rgb(255, 0, 255)"
 	});
+	const [neon, setNeon] = React.useState({
+		intensity: 80
+	});
 
 	const toRadians = (angleDegrees) => {
 		return angleDegrees * (Math.PI / 180);
 	};
 
-	console.log(`${(glitch.offset * 0.075) * -(Math.sin(toRadians(glitch.direction)))}px ${(glitch.offset * 0.075) * Math.cos(toRadians(glitch.direction))}px 0px rgb(0, 255, 255),
-	${(glitch.offset * 0.075) * Math.sin(toRadians(glitch.direction))}px ${(glitch.offset * 0.075) * -(Math.cos(toRadians(glitch.direction)))}px 0px ${glitch.color}`)
+	
 	return (
 		<div style={{ margin: 100}}>
 			<Stack sx={{ marginBottom: 5 }} direction="row" spacing={5}>
@@ -62,6 +65,7 @@ const App = () => {
                 <Button variant="contained" onClick={() => setCurrentEffect("lift")}>Lift</Button>
 				<Button variant="contained" onClick={() => setCurrentEffect("shadow")}>Shadow</Button>
 				<Button variant="contained" onClick={() => setCurrentEffect("glitch")}>Glitch</Button>
+				<Button variant="contained" onClick={() => setCurrentEffect("neon")}>Neon</Button>
 			</Stack>
 
 			{currentEffect === "hollow" && 
@@ -248,6 +252,16 @@ const App = () => {
 			</Box>
 			}
 
+			{currentEffect === "neon" &&
+			<TextField 
+			id="intensity" 
+			label="Intensity" 
+			variant="standard" 
+			value={neon.intensity} 
+			onChange={(e) => setNeon({...neon, intensity: e.target.value})}
+			/>
+			}
+
 			<div style={{ margin: '120px 0px 0px 550px' }}>
 				<div className={currentEffect}>
 					<div 
@@ -282,6 +296,11 @@ const App = () => {
 						{
 							textShadow: `${(glitch.offset * 0.075) * -(Math.sin(toRadians(glitch.direction)))}px ${(glitch.offset * 0.075) * Math.cos(toRadians(glitch.direction))}px 0px rgb(0, 255, 255),
 										${(glitch.offset * 0.075) * Math.sin(toRadians(glitch.direction))}px ${(glitch.offset * 0.075) * -(Math.cos(toRadians(glitch.direction)))}px 0px ${glitch.color}`
+						}
+						:
+						currentEffect === "neon" ?
+						{
+							color: `rgb(${neon.intensity * 2.02 + 53}, ${neon.intensity * 1.97 + 58}, ${neon.intensity * 1.8 + 75})`
 						}
 						: {} 
 					: {} 

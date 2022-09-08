@@ -47,7 +47,7 @@ const App = () => {
 		color: "rgb(255, 0, 255)"
 	});
 	const [neon, setNeon] = React.useState({
-		intensity: 80
+		intensity: 50
 	});
 
 	const toRadians = (angleDegrees) => {
@@ -300,6 +300,7 @@ const App = () => {
 						:
 						currentEffect === "neon" ?
 						{
+							filter: `drop-shadow(rgba(24, 40, 83, 0.95) 0px 0px ${neon.intensity * 0.0102599 + 1.50901}), drop-shadow(rgba(47, 56, 83, 0.75) 0px 0px ${neon.intensity * 0.0512993 + 7.54507}), drop-shadow(rgba(47, 56, 83, 0.44) 0px 0px ${neon.intensity * 0.153898 + 22.6352})`,
 							color: `rgb(${neon.intensity * 2.02 + 53}, ${neon.intensity * 1.97 + 58}, ${neon.intensity * 1.8 + 75})`
 						}
 						: {} 

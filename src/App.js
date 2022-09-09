@@ -14,6 +14,7 @@ import "../src/components/lift/style.scss"
 import "../src/components/shadow/style.scss"
 import "../src/components/glitch/style.scss"
 import "../src/components/neon/style.scss"
+// import "../src/components/background/style.scss"
 
 const App = () => {
 	const [currentEffect, setCurrentEffect] = React.useState("");
@@ -49,6 +50,12 @@ const App = () => {
 	const [neon, setNeon] = React.useState({
 		intensity: 50
 	});
+	const [background, setBackground] = React.useState({
+		roundness: 50,
+		spread: 20,
+		transparency: 100,
+		color: "green"
+	})
 
 	const toRadians = (angleDegrees) => {
 		return angleDegrees * (Math.PI / 180);
@@ -66,6 +73,7 @@ const App = () => {
 				<Button variant="contained" onClick={() => setCurrentEffect("shadow")}>Shadow</Button>
 				<Button variant="contained" onClick={() => setCurrentEffect("glitch")}>Glitch</Button>
 				<Button variant="contained" onClick={() => setCurrentEffect("neon")}>Neon</Button>
+				<Button variant="contained" onClick={() => setCurrentEffect("background")}>Background</Button>
 			</Stack>
 
 			{currentEffect === "hollow" && 
@@ -245,8 +253,8 @@ const App = () => {
 					>
 						<MenuItem value={"rgb(255, 0, 255)"}>Pink</MenuItem>
 						<MenuItem value={"rgb(255, 0, 0)"}>Red</MenuItem>
-						<MenuItem value={"rgb(0, 255, 0"}>Green</MenuItem>
-						<MenuItem value={"rgb(0, 0, 255"}>Blue</MenuItem>
+						<MenuItem value={"rgb(0, 255, 0)"}>Green</MenuItem>
+						<MenuItem value={"rgb(0, 0, 255)"}>Blue</MenuItem>
 					</Select>
 				</FormControl>
 			</Box>
@@ -260,6 +268,49 @@ const App = () => {
 			value={neon.intensity} 
 			onChange={(e) => setNeon({...neon, intensity: e.target.value})}
 			/>
+			}
+
+			{currentEffect === "background" &&
+			<Box>
+				<TextField 
+				id="roundness" 
+				label="Roundness" 
+				variant="standard" 
+				value={background.roundness} 
+				onChange={(e) => setBackground({...background, roundness: e.target.value})}
+				/>
+				<TextField 
+				sx={{ marginLeft: 5 }}
+				id="spread" 
+				label="Spread" 
+				variant="standard" 
+				value={background.spread} 
+				onChange={(e) => setBackground({...background, spread: e.target.value})}
+				/>
+				<TextField 
+				sx={{ marginLeft: 5 }}
+				id="transparency" 
+				label="Transparency" 
+				variant="standard" 
+				value={background.transparency} 
+				onChange={(e) => setBackground({...background, transparency: e.target.value})}
+				/>
+				<FormControl variant="standard" sx={{ marginLeft: 5 }}>
+					<InputLabel id="label-background-color">Color</InputLabel>
+					<Select
+						labelId="label-background-color"
+						id="select-background-color"
+						value={background.color}
+						label="Color"
+						onChange={(e) => setBackground({...background, color: e.target.value})}
+					>
+						<MenuItem value={"pink"}>Pink</MenuItem>
+						<MenuItem value={"red"}>Red</MenuItem>
+						<MenuItem value={"green"}>Green</MenuItem>
+						<MenuItem value={"blue"}>Blue</MenuItem>
+					</Select>
+				</FormControl>
+			</Box>
 			}
 
 			<div style={{ margin: '120px 0px 0px 550px' }}>
@@ -302,6 +353,16 @@ const App = () => {
 						{
 							filter: `drop-shadow(rgba(24, 40, 83, 0.95) 0px 0px ${neon.intensity * 0.0102599 + 1.50901}), drop-shadow(rgba(47, 56, 83, 0.75) 0px 0px ${neon.intensity * 0.0512993 + 7.54507}), drop-shadow(rgba(47, 56, 83, 0.44) 0px 0px ${neon.intensity * 0.153898 + 22.6352})`,
 							color: `rgb(${neon.intensity * 2.02 + 53}, ${neon.intensity * 1.97 + 58}, ${neon.intensity * 1.8 + 75})`
+						}
+						:
+						currentEffect === "background" ?
+						{
+							display: `table`,
+							color: `#ffffff`,
+							borderRadius: `${background.roundness}px`,
+							padding: `${background.spread}px`,
+							opacity: background.transparency / 100,
+							backgroundColor: background.color
 						}
 						: {} 
 					: {} 

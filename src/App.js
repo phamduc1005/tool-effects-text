@@ -14,7 +14,6 @@ import "../src/components/lift/style.scss"
 import "../src/components/shadow/style.scss"
 import "../src/components/glitch/style.scss"
 import "../src/components/neon/style.scss"
-// import "../src/components/background/style.scss"
 
 const App = () => {
 	const [currentEffect, setCurrentEffect] = React.useState("");
@@ -57,11 +56,24 @@ const App = () => {
 		color: "green"
 	})
 
+	const handleLimit = (min, max, value) => {
+		if (value > max) {
+			return max
+		} else if (value < min) {
+			return min
+		} else {
+			return value
+		}
+	}
+
 	const toRadians = (angleDegrees) => {
 		return angleDegrees * (Math.PI / 180);
 	};
 
-	
+	console.log({ 
+		WebkitTextStroke: (splice.thickness - 1) * 0.03 + 0.825, 
+		textShadow: `${(splice.offset * 0.15) * -(Math.sin(toRadians(splice.direction)))}px ${(splice.offset * 0.15) * Math.cos(toRadians(splice.direction))}px 0px ${splice.color}`
+	})
 	return (
 		<div style={{ margin: 100}}>
 			<Stack sx={{ marginBottom: 5 }} direction="row" spacing={5}>
@@ -79,10 +91,11 @@ const App = () => {
 			{currentEffect === "hollow" && 
 			<TextField 
 			id="thickness" 
+			type={"number"}
 			label="Thickness" 
 			variant="standard" 
 			value={hollow.thickness} 
-			onChange={(e) => setHollow({...hollow, thickness: e.target.value})}
+			onChange={(e) => setHollow({...hollow, thickness: handleLimit(1, 100, e.target.value)})}
 			/>
 			}
 
@@ -90,26 +103,29 @@ const App = () => {
 			<Box>
 				<TextField 
 				id="thickness" 
+				type={"number"}
 				label="Thickness" 
 				variant="standard" 
 				value={splice.thickness} 
-				onChange={(e) => setSplice({...splice, thickness: e.target.value})}
+				onChange={(e) => setSplice({...splice, thickness: handleLimit(1, 100, e.target.value)})}
 				/>
 				<TextField 
 				sx={{ marginLeft: 5 }}
 				id="offset" 
+				type={"number"}
 				label="Offset" 
 				variant="standard" 
 				value={splice.offset} 
-				onChange={(e) => setSplice({...splice, offset: e.target.value})}
+				onChange={(e) => setSplice({...splice, offset: handleLimit(0, 100, e.target.value)})}
 				/>
 				<TextField 
 				sx={{ marginLeft: 5 }}
 				id="direction" 
+				type={"number"}
 				label="Direction" 
 				variant="standard" 
 				value={splice.direction} 
-				onChange={(e) => setSplice({...splice, direction: e.target.value})}
+				onChange={(e) => setSplice({...splice, direction: handleLimit(-180, 180, e.target.value)})}
 				/>
 				<FormControl variant="standard" sx={{ marginLeft: 5 }}>
                     <InputLabel id="label-splice-color">Color</InputLabel>
@@ -133,18 +149,20 @@ const App = () => {
             <Box>
                 <TextField 
 				id="offset" 
+				type={"number"}
 				label="Offset" 
 				variant="standard" 
 				value={echo.offset} 
-				onChange={(e) => setEcho({...echo, offset: e.target.value})}
+				onChange={(e) => setEcho({...echo, offset: handleLimit(1, 100, e.target.value)})}
 				/>
                 <TextField 
 				sx={{ marginLeft: 5 }}
 				id="direction" 
+				type={"number"}
 				label="Direction" 
 				variant="standard" 
 				value={echo.direction} 
-				onChange={(e) => setEcho({...echo, direction: e.target.value})}
+				onChange={(e) => setEcho({...echo, direction: handleLimit(-180, 180, e.target.value)})}
 				/>
                 <FormControl variant="standard" sx={{ marginLeft: 5 }}>
                     <InputLabel id="label-echo-color">Color</InputLabel>
@@ -167,10 +185,11 @@ const App = () => {
             {currentEffect === "lift" &&
             <TextField 
             id="intensity" 
+			type={"number"}
             label="intensity" 
             variant="standard" 
             value={lift.intensity} 
-            onChange={(e) => setLift({...lift, intensity: e.target.value})}
+            onChange={(e) => setLift({...lift, intensity: handleLimit(0, 100, e.target.value)})}
             />
             }
 
@@ -178,34 +197,38 @@ const App = () => {
 			<Box>
 				<TextField 
 				id="offset" 
+				type={"number"}
 				label="Offset" 
 				variant="standard" 
 				value={shadow.offset} 
-				onChange={(e) => setShadow({...shadow, offset: e.target.value})}
+				onChange={(e) => setShadow({...shadow, offset: handleLimit(0, 100, e.target.value)})}
 				/>
 				<TextField 
 				sx={{ marginLeft: 5 }}
 				id="direction" 
+				type={"number"}
 				label="Direction" 
 				variant="standard" 
 				value={shadow.direction} 
-				onChange={(e) => setShadow({...shadow, direction: e.target.value})}
+				onChange={(e) => setShadow({...shadow, direction: handleLimit(-180, 180, e.target.value)})}
 				/>
 				<TextField 
 				sx={{ marginLeft: 5 }}
 				id="blur" 
+				type={"number"}
 				label="Blur" 
 				variant="standard" 
 				value={shadow.blur} 
-				onChange={(e) => setShadow({...shadow, blur: e.target.value})}
+				onChange={(e) => setShadow({...shadow, blur: handleLimit(0, 100, e.target.value)})}
 				/>
 				<TextField 
 				sx={{ marginLeft: 5 }}
 				id="transparency" 
+				type={"number"}
 				label="Transparency" 
 				variant="standard" 
 				value={shadow.transparency} 
-				onChange={(e) => setShadow({...shadow, transparency: e.target.value})}
+				onChange={(e) => setShadow({...shadow, transparency: handleLimit(0, 100, e.target.value)})}
 				/>
 				<FormControl variant="standard" sx={{ marginLeft: 5 }}>
 					<InputLabel id="label-shadow-color">Color</InputLabel>
@@ -229,18 +252,20 @@ const App = () => {
 			<Box>
 				<TextField 
 				id="offset" 
+				type={"number"}
 				label="Offset" 
 				variant="standard" 
 				value={glitch.offset} 
-				onChange={(e) => setGlitch({...glitch, offset: e.target.value})}
+				onChange={(e) => setGlitch({...glitch, offset: handleLimit(1, 100, e.target.value)})}
 				/>
 				<TextField 
 				sx={{ marginLeft: 5 }}
 				id="direction" 
+				type={"number"}
 				label="Direction" 
 				variant="standard" 
 				value={glitch.direction} 
-				onChange={(e) => setGlitch({...glitch, direction: e.target.value})}
+				onChange={(e) => setGlitch({...glitch, direction: handleLimit(-180, 180, e.target.value)})}
 				/>
 				<FormControl variant="standard" sx={{ marginLeft: 5 }}>
 					<InputLabel id="label-glitch-color">Color</InputLabel>
@@ -263,10 +288,11 @@ const App = () => {
 			{currentEffect === "neon" &&
 			<TextField 
 			id="intensity" 
+			type={"number"}
 			label="Intensity" 
 			variant="standard" 
 			value={neon.intensity} 
-			onChange={(e) => setNeon({...neon, intensity: e.target.value})}
+			onChange={(e) => setNeon({...neon, intensity: handleLimit(1, 100, e.target.value)})}
 			/>
 			}
 
@@ -274,26 +300,29 @@ const App = () => {
 			<Box>
 				<TextField 
 				id="roundness" 
+				type={"number"}
 				label="Roundness" 
 				variant="standard" 
 				value={background.roundness} 
-				onChange={(e) => setBackground({...background, roundness: e.target.value})}
+				onChange={(e) => setBackground({...background, roundness: handleLimit(0, 100, e.target.value)})}
 				/>
 				<TextField 
 				sx={{ marginLeft: 5 }}
 				id="spread" 
+				type={"number"}
 				label="Spread" 
 				variant="standard" 
 				value={background.spread} 
-				onChange={(e) => setBackground({...background, spread: e.target.value})}
+				onChange={(e) => setBackground({...background, spread: handleLimit(0, 100, e.target.value)})}
 				/>
 				<TextField 
 				sx={{ marginLeft: 5 }}
 				id="transparency" 
+				type={"number"}
 				label="Transparency" 
 				variant="standard" 
 				value={background.transparency} 
-				onChange={(e) => setBackground({...background, transparency: e.target.value})}
+				onChange={(e) => setBackground({...background, transparency: handleLimit(0, 100, e.target.value)})}
 				/>
 				<FormControl variant="standard" sx={{ marginLeft: 5 }}>
 					<InputLabel id="label-background-color">Color</InputLabel>
@@ -319,11 +348,11 @@ const App = () => {
 					style={ 
 					currentEffect ? 
 						currentEffect === "hollow" ? 
-						{ WebkitTextStroke: (hollow.thickness - 1) * 0.075 + 0.825 } 
+						{ WebkitTextStroke: (hollow.thickness - 1) * 0.03 + 0.825 } 
 						: 
 						currentEffect === "splice" ? 
 						{ 
-						    WebkitTextStroke: (splice.thickness - 1) * 0.075 + 0.825, 
+						    WebkitTextStroke: (splice.thickness - 1) * 0.03 + 0.825, 
 						    textShadow: `${(splice.offset * 0.15) * -(Math.sin(toRadians(splice.direction)))}px ${(splice.offset * 0.15) * Math.cos(toRadians(splice.direction))}px 0px ${splice.color}`
 						} 
                         : 
@@ -368,7 +397,7 @@ const App = () => {
 					: {} 
 					}
 					>
-						<h1 style={{ fontSize: 50 }}>Thank kiu nhe !!</h1>      
+						<div style={{ fontSize: 70 }}>Thank kiu nhe !!</div>      
 					</div>
 				</div>
 			</div>

@@ -16,6 +16,7 @@ import "../src/components/glitch/style.scss"
 import "../src/components/neon/style.scss"
 
 const App = () => {
+	const [fontSize, setFontSize] = React.useState(70)
 	const [currentEffect, setCurrentEffect] = React.useState("");
 	const [hollow, setHollow] = React.useState({
 		thickness: 50
@@ -70,10 +71,14 @@ const App = () => {
 		return angleDegrees * (Math.PI / 180);
 	};
 
-	console.log({ 
-		WebkitTextStroke: (splice.thickness - 1) * 0.03 + 0.825, 
-		textShadow: `${(splice.offset * 0.15) * -(Math.sin(toRadians(splice.direction)))}px ${(splice.offset * 0.15) * Math.cos(toRadians(splice.direction))}px 0px ${splice.color}`
-	})
+	const handleCalculateWithFontSize = (value) => {
+		if (fontSize < 10) {
+			return value;
+		}
+		const newValue = ((value / 9) * (fontSize - 9)) + value
+		return newValue;
+	};
+
 	return (
 		<div style={{ margin: 100}}>
 			<Stack sx={{ marginBottom: 5 }} direction="row" spacing={5}>
@@ -86,6 +91,14 @@ const App = () => {
 				<Button variant="contained" onClick={() => setCurrentEffect("glitch")}>Glitch</Button>
 				<Button variant="contained" onClick={() => setCurrentEffect("neon")}>Neon</Button>
 				<Button variant="contained" onClick={() => setCurrentEffect("background")}>Background</Button>
+				<TextField 
+				id="fontsize" 
+				type="number"
+				label="Fontsize" 
+				variant="standard" 
+				value={fontSize} 
+				onChange={(e) => setFontSize(Number(e.target.value))}
+				/>
 			</Stack>
 
 			{currentEffect === "hollow" && 
@@ -344,44 +357,79 @@ const App = () => {
 
 			<div style={{ margin: '120px 0px 0px 550px' }}>
 				<div className={currentEffect}>
+					{/* { console.log(lift.intensity / 100) } */}
 					<div 
 					style={ 
 					currentEffect ? 
 						currentEffect === "hollow" ? 
-						{ WebkitTextStroke: (hollow.thickness - 1) * 0.03 + 0.825 } 
+						{ WebkitTextStroke: handleCalculateWithFontSize((hollow.thickness - 1) * 0.0075 + 0.0825) } 
 						: 
 						currentEffect === "splice" ? 
 						{ 
-						    WebkitTextStroke: (splice.thickness - 1) * 0.03 + 0.825, 
-						    textShadow: `${(splice.offset * 0.15) * -(Math.sin(toRadians(splice.direction)))}px ${(splice.offset * 0.15) * Math.cos(toRadians(splice.direction))}px 0px ${splice.color}`
+						    WebkitTextStroke: handleCalculateWithFontSize((splice.thickness - 1) * 0.0075 + 0.0825), 
+						    textShadow: `${handleCalculateWithFontSize(splice.offset * 0.015) * -(Math.sin(toRadians(splice.direction)))}px 
+										${handleCalculateWithFontSize(splice.offset * 0.015) * (Math.cos(toRadians(splice.direction)))}px 
+										0px
+										${splice.color}`
 						} 
                         : 
                         currentEffect === "echo" ?
                         { 
-                            textShadow: `${(echo.offset * 0.15) * -(Math.sin(toRadians(echo.direction)))}px ${(echo.offset * 0.15) * Math.cos(toRadians(echo.direction))}px 0px ${echo.color}, 0.5), 
-                                        ${((echo.offset * 0.15) * -(Math.sin(toRadians(echo.direction))))* 2}px ${((echo.offset * 0.15) * Math.cos(toRadians(echo.direction)))* 2}px 0px ${echo.color}, 0.3) ` 
+                            textShadow: `${handleCalculateWithFontSize(echo.offset * 0.015) * -(Math.sin(toRadians(echo.direction)))}px 
+										${handleCalculateWithFontSize(echo.offset * 0.015) * Math.cos(toRadians(echo.direction))}px 
+										0px 
+										${echo.color}, 0.5), 
+                                        ${(handleCalculateWithFontSize(echo.offset * 0.015) * -(Math.sin(toRadians(echo.direction))))* 2}px 
+										${(handleCalculateWithFontSize(echo.offset * 0.015) * Math.cos(toRadians(echo.direction)))* 2}px 
+										0px 
+										${echo.color}, 0.3)` 
                         }
                         :
                         currentEffect === "lift" ?
                         {
-                            textShadow: `0px 4.5px ${lift.intensity * 0.2925 + 4.5}px rgba(0, 0, 0, ${lift.intensity / 100})`
+                            textShadow: `0px 
+										${handleCalculateWithFontSize(0.45)}px 
+										${handleCalculateWithFontSize(lift.intensity * 0.02925 + 0.45)}px 
+										rgba(0, 0, 0, ${(lift.intensity * 0.55 + 5) / 100})`
                         }
 						:
 						currentEffect === "shadow" ?
 						{
-							textShadow: `${(shadow.offset * 0.15) * -(Math.sin(toRadians(shadow.direction)))}px ${(shadow.offset * 0.15) * Math.cos(toRadians(shadow.direction))}px ${shadow.blur * 0.15}px ${shadow.color}, ${shadow.transparency / 100})`
+							textShadow: `${handleCalculateWithFontSize(shadow.offset * 0.015) * -(Math.sin(toRadians(shadow.direction)))}px 
+										${handleCalculateWithFontSize(shadow.offset * 0.015) * Math.cos(toRadians(shadow.direction))}px 
+										${handleCalculateWithFontSize(shadow.blur * 0.015)}px 
+										${shadow.color}, ${shadow.transparency / 100})`
 						}
 						:
 						currentEffect === "glitch" ?
 						{
-							textShadow: `${(glitch.offset * 0.075) * -(Math.sin(toRadians(glitch.direction)))}px ${(glitch.offset * 0.075) * Math.cos(toRadians(glitch.direction))}px 0px rgb(0, 255, 255),
-										${(glitch.offset * 0.075) * Math.sin(toRadians(glitch.direction))}px ${(glitch.offset * 0.075) * -(Math.cos(toRadians(glitch.direction)))}px 0px ${glitch.color}`
+							textShadow: `${handleCalculateWithFontSize(glitch.offset * 0.0075) * -(Math.sin(toRadians(glitch.direction)))}px 
+										${handleCalculateWithFontSize(glitch.offset * 0.0075) * Math.cos(toRadians(glitch.direction))}px 
+										0px 
+										rgb(0, 255, 255),
+										${handleCalculateWithFontSize(glitch.offset * 0.0075) * Math.sin(toRadians(glitch.direction))}px 
+										${handleCalculateWithFontSize(glitch.offset * 0.0075) * -(Math.cos(toRadians(glitch.direction)))}px 
+										0px 
+										${glitch.color}`
 						}
 						:
 						currentEffect === "neon" ?
 						{
-							filter: `drop-shadow(rgba(24, 40, 83, 0.95) 0px 0px ${neon.intensity * 0.0102599 + 1.50901}), drop-shadow(rgba(47, 56, 83, 0.75) 0px 0px ${neon.intensity * 0.0512993 + 7.54507}), drop-shadow(rgba(47, 56, 83, 0.44) 0px 0px ${neon.intensity * 0.153898 + 22.6352})`,
-							color: `rgb(${neon.intensity * 2.02 + 53}, ${neon.intensity * 1.97 + 58}, ${neon.intensity * 1.8 + 75})`
+							filter: `drop-shadow(rgba(24, 40, 83, 0.95) 
+									0px 
+									0px 
+									${handleCalculateWithFontSize((neon.intensity - 1) * 0.000904 + 0.150901)}px) 
+									drop-shadow(rgba(47, 56, 83, 0.75) 
+									0px 
+									0px 
+									${handleCalculateWithFontSize((neon.intensity - 1) * 0.00452 + 0.754507)}px) 
+									drop-shadow(rgba(47, 56, 83, 0.44) 
+									0px 
+									0px 
+									${handleCalculateWithFontSize((neon.intensity - 1) * 0.01356 + 2.26352)}px)`,
+							color: `rgb(${neon.intensity * 2.02 + 53}, 
+									${neon.intensity * 1.97 + 58}, 
+									${neon.intensity * 1.8 + 75})`
 						}
 						:
 						currentEffect === "background" ?
@@ -397,7 +445,7 @@ const App = () => {
 					: {} 
 					}
 					>
-						<div style={{ fontSize: 70 }}>Thank kiu nhe !!</div>      
+						<p style={{ fontSize: fontSize }}>Thank kiu nhe !!</p>      
 					</div>
 				</div>
 			</div>

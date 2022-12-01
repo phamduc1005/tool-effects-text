@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="https://unpkg.com/konva@8.3.14/konva.min.js"></script>
+    <meta charset="utf-8" />
+    <title>Konva Shadow Demo</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #c59494;
+        }
+    </style>
+</head>
+
+<body>
+    Spread: <input type="number" id="tentacles" name="tentacles" min="1" max="100" value="1">
+    <button onclick="myFunction()">Try it</button>
+
+    <div id="container"></div>
+    <script>
+        const widthRect = 150;
+        const heightRect = 50;
+
+        function myFunction() {
+            var scaleBy = Number(document.getElementById("tentacles").value);
+
+            var width = window.innerWidth;
+            var height = window.innerHeight;
+
+            var stage = new Konva.Stage({
+                container: "container",
+                width: width,
+                height: height,
+            });
+            var layer = new Konva.Layer();
+            stage.add(layer);
+
+            var rect = new Konva.Rect({
+                x: stage.width() / 2,
+                y: stage.height() / 2,
+                width: widthRect,
+                height: heightRect,
+                fill: '#00D2FF',
+            });
+
+            var text = new Konva.Text({
+                text: "RESULT",
+                fontFamily: "Arial",
+                fontSize: 40,
+                x: stage.width() / 2,
+                y: stage.height() / 2,
+            });
+
+            var group = new Konva.Group({
+                x: 0,
+                y: 0,
+            })
+
+            group.add(rect, text)
+            layer.add(group)
+
+            if (scaleBy > 1) {
+                scaleBy = (scaleBy / 80) + 1
+            }
+
+            rect.scale({ x: scaleBy, y: scaleBy });
+            rect.setAttr("x", stage.width() / 2 - widthRect * (scaleBy - 1) / 2)
+            rect.setAttr("y", stage.height() / 2 - heightRect * (scaleBy - 1) / 2)
+
+            stage.batchDraw();
+        };
+
+        myFunction()
+    </script>
+</body>
+
+</html>
